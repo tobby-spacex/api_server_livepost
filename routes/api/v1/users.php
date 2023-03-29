@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 //    'middleware' => [
 //        'auth',
 //    ],
-//    'prefix' => 'heyaa',
+//    'prefix' => 'sample',
 //    'as' => 'users.',
 //    'namespace' => "\App\Http\Controllers",
 //], function(){
