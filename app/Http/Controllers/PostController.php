@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 
@@ -32,17 +33,25 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        $created = Post::query()->create([
-            'title' => $request->title,
-            'body' => $request->body
-        ]);
+        $created = DB::transaction(function () use ($request) {
+
+            $created = Post::query()->create([
+                'title' => $request->title,
+                'body'  => $request->body,
+            ]);
+            
+            if($userIds = $request->user_ids){
+                $created->users()->sync($userIds);
+            }
+            return $created;
+        });
 
         return new JsonResponse([
             'data' => $created
         ]);
     }
 
-    /**
+      /**
      * Display the specified resource.
      *
      * @param  \App\Models\Post  $post
