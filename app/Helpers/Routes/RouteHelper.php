@@ -22,7 +22,7 @@ class RouteHelper
                 && $it->current()->getExtension() === 'php')
             {
                 require $it->key();
-//                require $it->current()->getPathname();
+    //                require $it->current()->getPathname();
             }
             $it->next();
         }

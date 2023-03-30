@@ -9,9 +9,20 @@ class Post extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'body',
+    ];
+
     protected $casts = [
         'body' => 'array'
     ];
+
+    // This will add additional fields to the json response
+    
+    // protected $appends = [
+    //     'title_upper_case',
+    // ];
 
     public function getTitleUpperCaseAttribute()
     {

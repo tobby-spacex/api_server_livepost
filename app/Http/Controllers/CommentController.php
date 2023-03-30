@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
-use App\Models\Comment;
 
 class CommentController extends Controller
 {
@@ -15,7 +16,11 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        $comments = Comment::query()->get();
+
+        return new \Illuminate\Http\JsonResponse([
+            'data' => $comments,
+        ]);
     }
 
     /**
@@ -26,7 +31,14 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request)
     {
-        //
+        $created = Comment::query()->create([
+            'title' => $request->title,
+            'body' => $request->body,
+        ]);
+
+        return new JsonResponse([
+            'data' => $created,
+        ]);
     }
 
     /**
@@ -37,7 +49,9 @@ class CommentController extends Controller
      */
     public function show(Comment $comment)
     {
-        //
+        return new JsonResponse([
+            'data' => $comment,
+        ]);
     }
 
     /**
@@ -49,7 +63,20 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        //
+        $updated = $comment->update([
+            'title' => $request->title ?? $comment->title,
+            'body' => $request->body ?? $comment->body,
+        ]);
+
+        if(!$updated){
+            return new JsonResponse([
+                'error' => 'Failed to update resource.'
+            ]);
+        }
+
+        return new JsonResponse([
+            'data' => $comment
+        ]);
     }
 
     /**
@@ -60,6 +87,15 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        //
+        $deleted = $comment->forceDelete();
+
+        if(!$deleted){
+            return new JsonResponse([
+                'error' => 'Failed to delete resource.'
+            ]);
+        }
+        return new JsonResponse([
+            'data' => 'success',
+        ]);
     }
 }

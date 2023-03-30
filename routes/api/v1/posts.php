@@ -15,7 +15,7 @@ Route::middleware([
             ->name('show')
             ->where(['post' => '[0-9]+']);
 
-        Route::post('/posts', [PostController::class, 'store'])->name('store');
+        Route::post('/posts', [PostController::class, 'store'])->name('store')->withoutMiddleware('auth');
         
         Route::patch('/posts/{post}', [PostController::class, 'update'])->name('update');
 
