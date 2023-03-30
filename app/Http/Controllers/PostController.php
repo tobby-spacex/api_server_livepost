@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostResource;
 
 class PostController extends Controller
 {
@@ -20,9 +21,11 @@ class PostController extends Controller
           // return Post::all();
         $posts = Post::query()->get();
 
-        return new JsonResponse([
-            'data' => $posts
-        ]);
+          // return new JsonResponse([
+          //     'data' => $posts
+          // ]);
+        
+        return PostResource::collection($posts);  
     }
 
     /**
@@ -39,29 +42,29 @@ class PostController extends Controller
                 'title' => $request->title,
                 'body'  => $request->body,
             ]);
-            
+
             if($userIds = $request->user_ids){
                 $created->users()->sync($userIds);
             }
             return $created;
         });
 
-        return new JsonResponse([
-            'data' => $created
-        ]);
+        return new PostResource($created);
     }
 
       /**
      * Display the specified resource.
      *
      * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
+     * @return PostResource
      */
     public function show(Post $post)
     {
-        return new JsonResponse([
-            'data' => $post
-        ]);
+          // return new JsonResponse([
+          //     'data' => $post
+          // ]);
+        
+          return new PostResource($post);
     }
 
     /**
@@ -86,9 +89,7 @@ class PostController extends Controller
             ], 400);
         }
 
-        return new JsonResponse([
-            'data' => $post
-        ]); 
+        return new PostResource($updated);
     }
 
     /**
@@ -109,8 +110,6 @@ class PostController extends Controller
             ], 400);    
         }
 
-        return new JsonResponse([
-            'data' => 'success'
-        ]); 
+        return new PostResource($deleted);
     }
 }
