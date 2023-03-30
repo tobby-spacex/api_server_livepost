@@ -19,7 +19,9 @@ class PostSeeder extends Seeder
     {
         $this->disableForeignKeys();
         $this->truncate('posts');
-        Post::factory(3)->untitled()->create();
+        Post::factory(200)
+            // ->untitled()
+            ->create();
         $this->enableForeignKeys();
     }
 }

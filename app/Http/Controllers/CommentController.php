@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\CommentResource;
 use App\Http\Requests\StoreCommentRequest;
@@ -15,9 +16,9 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $comments = Comment::query()->get();
+        $comments = Comment::query()->paginate($request->page_size ?? 20);
 
         return CommentResource::collection($comments);
     }
