@@ -3,9 +3,11 @@
 
 namespace App\Repositories;
 
-
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Events\Models\User\UserCreated;
+use App\Events\Models\User\UserDeleted;
+use App\Events\Models\User\UserUpdated;
 
 class UserRepository extends BaseRepository
 {
@@ -18,6 +20,9 @@ class UserRepository extends BaseRepository
                 'name' => data_get($attributes, 'name'),
                 'email' => data_get($attributes, 'email'),
             ]);
+
+            event(new UserCreated($created));
+
             return $created;
         });
     }
@@ -38,6 +43,8 @@ class UserRepository extends BaseRepository
             if(!$updated){
                 throw new \Exception('Failed to update user');
             }
+            
+            event(new UserUpdated($user));
 
             return $user;
 
@@ -56,6 +63,8 @@ class UserRepository extends BaseRepository
             if(!$deleted){
                 throw new \Exception("cannot delete user.");
             }
+            
+            event(new UserDeleted($user));
 
             return $deleted;
         });
